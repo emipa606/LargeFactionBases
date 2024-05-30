@@ -1,0 +1,21 @@
+- tile ID for walls
+- diningRoom 3 fix
+- bleeding wounds from slaves
+
+to do:
+- manned mortar bug 2000 ticks ==  vanilla issue
+
+2021-08-05:
+- balance : 
+regular stockpiles in extWalls
+lower cellCoverage free Cells .65 -> .45
+mostly slaves
+royalty 3-6 -> 1-4
+
+- fix base spawning
+=======
+- manned mortar bug 2000 ticks
+
+- anti grain warhead cost 0  
+
+- wall baseMarketValue < 1
