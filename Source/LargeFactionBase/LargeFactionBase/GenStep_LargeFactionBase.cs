@@ -9,7 +9,7 @@ namespace LargeFactionBase;
 public class GenStep_LargeFactionBase : GenStep
 {
     private static readonly List<CellRect> possibleRects = [];
-    public FloatRange defaultPawnGroupPointsRange = SymbolResolver_Settlement2.DefaultPawnsPoints;
+    public FloatRange DefaultPawnGroupPointsRange = SymbolResolver_Settlement2.DefaultPawnsPoints;
 
     private bool flag;
 
@@ -28,7 +28,7 @@ public class GenStep_LargeFactionBase : GenStep
             ? map.ParentFaction
             : Find.FactionManager.RandomEnemyFaction();
         var resolveParams = default(ResolveParams);
-        resolveParams.rect = GetOutpostRect(var, map);
+        resolveParams.rect = getOutpostRect(var, map);
         resolveParams.faction = faction;
         resolveParams.edgeDefenseWidth = 4;
         resolveParams.thingSetMakerDef = LargeFactionBase_ThingSetMakerDefOf.MapGen_DefaultStockpile3;
@@ -55,7 +55,7 @@ public class GenStep_LargeFactionBase : GenStep
         var a = Mathf.Abs(num10 * num8);
         var num11 = Mathf.Min(a, 0.8f);
         var num12 = (num5 * num11) + 0.85f;
-        resolveParams.settlementPawnGroupPoints = defaultPawnGroupPointsRange.RandomInRange * num4 * num3 * num12;
+        resolveParams.settlementPawnGroupPoints = DefaultPawnGroupPointsRange.RandomInRange * num4 * num3 * num12;
         BaseGen.globalSettings.map = map;
         BaseGen.symbolStack.Push("settlement2", resolveParams);
         var resolveParams2 = default(ResolveParams);
@@ -125,7 +125,7 @@ public class GenStep_LargeFactionBase : GenStep
             }
 
             var rect2 = resolveParams2.rect.ContractedBy(1);
-            _ = Mathf.Clamp(rect2.Width, 1, Mathf.Min(rect2.Width, rect2.Height) / 2);
+            num17 = Mathf.Clamp(rect2.Width, 1, Mathf.Min(rect2.Width, rect2.Height) / 2);
             var resolveParams7 = resolveParams2;
             resolveParams7.faction = faction;
             resolveParams7.rect = rect2;
@@ -148,7 +148,7 @@ public class GenStep_LargeFactionBase : GenStep
             }
 
             var rect3 = resolveParams2.rect.ContractedBy(3);
-            _ = Mathf.Clamp(rect3.Width, 1, Mathf.Min(rect3.Width, rect3.Height) / 2);
+            num17 = Mathf.Clamp(rect3.Width, 1, Mathf.Min(rect3.Width, rect3.Height) / 2);
             var resolveParams9 = resolveParams2;
             resolveParams9.faction = faction;
             resolveParams9.rect = rect3;
@@ -208,7 +208,7 @@ public class GenStep_LargeFactionBase : GenStep
             }
 
             var rect6 = resolveParams2.rect.ContractedBy(1);
-            _ = Mathf.Clamp(rect6.Width, 1, Mathf.Min(rect6.Width, rect6.Height) / 2);
+            num20 = Mathf.Clamp(rect6.Width, 1, Mathf.Min(rect6.Width, rect6.Height) / 2);
             var resolveParams15 = resolveParams2;
             resolveParams15.faction = faction;
             resolveParams15.rect = rect6;
@@ -231,7 +231,7 @@ public class GenStep_LargeFactionBase : GenStep
             }
 
             var rect7 = resolveParams2.rect.ContractedBy(3);
-            _ = Mathf.Clamp(rect7.Width, 1, Mathf.Min(rect7.Width, rect7.Height) / 2);
+            num20 = Mathf.Clamp(rect7.Width, 1, Mathf.Min(rect7.Width, rect7.Height) / 2);
             var resolveParams17 = resolveParams2;
             resolveParams17.faction = faction;
             resolveParams17.rect = rect7;
@@ -257,43 +257,43 @@ public class GenStep_LargeFactionBase : GenStep
         if ((num15 >= 0.7f) & ((int)resolveParams.faction.def.techLevel <= 3))
         {
             var rect8 = resolveParams2.rect.ExpandedBy(1);
-            _ = Mathf.Clamp(rect8.Width, 1, Mathf.Min(rect8.Width, rect8.Height) / 2);
+            rect8.Width = Mathf.Clamp(rect8.Width, 1, Mathf.Min(rect8.Width, rect8.Height) / 2);
             var resolveParams19 = resolveParams2;
             resolveParams19.faction = faction;
             resolveParams19.rect = rect8;
             BaseGen.symbolStack.Push("edgeSpikes2", resolveParams19);
             var rect9 = resolveParams2.rect.ContractedBy(1);
-            _ = Mathf.Clamp(rect9.Width, 1, Mathf.Min(rect9.Width, rect9.Height) / 2);
+            rect9.Width = Mathf.Clamp(rect9.Width, 1, Mathf.Min(rect9.Width, rect9.Height) / 2);
             var resolveParams20 = resolveParams2;
             resolveParams20.faction = faction;
             resolveParams20.rect = rect9;
             BaseGen.symbolStack.Push("edgeSpikes2", resolveParams20);
             var rect10 = resolveParams2.rect.ContractedBy(3);
-            _ = Mathf.Clamp(rect10.Width, 1, Mathf.Min(rect10.Width, rect10.Height) / 2);
+            rect10.Width = Mathf.Clamp(rect10.Width, 1, Mathf.Min(rect10.Width, rect10.Height) / 2);
             var resolveParams21 = resolveParams2;
             resolveParams21.faction = faction;
             resolveParams21.rect = rect10;
             BaseGen.symbolStack.Push("edgeSpikes2", resolveParams21);
             var rect11 = resolveParams2.rect.ContractedBy(5);
-            _ = Mathf.Clamp(rect11.Width, 1, Mathf.Min(rect11.Width, rect11.Height) / 2);
+            rect11.Width = Mathf.Clamp(rect11.Width, 1, Mathf.Min(rect11.Width, rect11.Height) / 2);
             var resolveParams22 = resolveParams2;
             resolveParams22.faction = faction;
             resolveParams22.rect = rect11;
             BaseGen.symbolStack.Push("edgeSpikes2", resolveParams22);
             var rect12 = resolveParams2.rect.ContractedBy(7);
-            _ = Mathf.Clamp(rect12.Width, 1, Mathf.Min(rect12.Width, rect12.Height) / 2);
+            rect12.Width = Mathf.Clamp(rect12.Width, 1, Mathf.Min(rect12.Width, rect12.Height) / 2);
             var resolveParams23 = resolveParams2;
             resolveParams23.faction = faction;
             resolveParams23.rect = rect12;
             BaseGen.symbolStack.Push("edgeSpikes2", resolveParams23);
             var rect13 = resolveParams2.rect.ContractedBy(9);
-            _ = Mathf.Clamp(rect13.Width, 1, Mathf.Min(rect13.Width, rect13.Height) / 2);
+            rect13.Width = Mathf.Clamp(rect13.Width, 1, Mathf.Min(rect13.Width, rect13.Height) / 2);
             var resolveParams24 = resolveParams2;
             resolveParams24.faction = faction;
             resolveParams24.rect = rect13;
             BaseGen.symbolStack.Push("edgeSpikes2", resolveParams24);
             var rect14 = resolveParams2.rect.ContractedBy(11);
-            _ = Mathf.Clamp(rect14.Width, 1, Mathf.Min(rect14.Width, rect14.Height) / 2);
+            rect14.Width = Mathf.Clamp(rect14.Width, 1, Mathf.Min(rect14.Width, rect14.Height) / 2);
             var resolveParams25 = resolveParams2;
             resolveParams25.faction = faction;
             resolveParams25.rect = rect14;
@@ -303,7 +303,7 @@ public class GenStep_LargeFactionBase : GenStep
         BaseGen.Generate();
     }
 
-    private CellRect GetOutpostRect(CellRect rectToDefend, Map map)
+    private static CellRect getOutpostRect(CellRect rectToDefend, Map map)
     {
         float num = Mathf.Min(GenDate.DaysPassed, 120);
         var b = 1f + (num / 300f);

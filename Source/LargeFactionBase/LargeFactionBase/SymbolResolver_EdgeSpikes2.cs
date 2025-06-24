@@ -6,9 +6,9 @@ namespace LargeFactionBase;
 
 public class SymbolResolver_EdgeSpikes2 : SymbolResolver
 {
-    private static readonly IntRange LineLengthRange = new IntRange(1, 1);
+    private static readonly IntRange LineLengthRange = new(1, 1);
 
-    private static readonly IntRange GapLengthRange = new IntRange(2, 8);
+    private static readonly IntRange GapLengthRange = new(2, 8);
 
     public override void Resolve(ResolveParams rp)
     {

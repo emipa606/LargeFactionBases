@@ -13,23 +13,23 @@ public class GenStep_LargePower : GenStep
     private const int MaxDistToExistingNetForTurrets = 13;
 
     private const int RoofPadding = 2;
+    private const bool CanSpawnBatteries = true;
 
-    private static readonly IntRange MaxDistanceBetweenBatteryAndTransmitter = new IntRange(20, 50);
+    private const bool CanSpawnPowerGenerators = true;
+
+    private const bool SpawnRoofOverNewBatteries = true;
+
+    private static readonly IntRange maxDistanceBetweenBatteryAndTransmitter = new(20, 50);
 
     private static readonly List<IntVec3> tmpTransmitterCells = [];
-    public readonly bool canSpawnBatteries = true;
-
-    public readonly bool canSpawnPowerGenerators = true;
-
-    public readonly bool spawnRoofOverNewBatteries = true;
 
     private readonly List<IntVec3> tmpCells = [];
 
-    private readonly Dictionary<PowerNet, bool> tmpPowerNetPredicateResults = new Dictionary<PowerNet, bool>();
+    private readonly Dictionary<PowerNet, bool> tmpPowerNetPredicateResults = new();
 
     private readonly List<Thing> tmpThings = [];
 
-    public FloatRange newBatteriesInitialStoredEnergyPctRange = new FloatRange(0.9f, 0.1f);
+    private FloatRange newBatteriesInitialStoredEnergyPctRange = new(0.9f, 0.1f);
 
     public override int SeedPart => 1186199651;
 
@@ -37,27 +37,27 @@ public class GenStep_LargePower : GenStep
     {
         map.skyManager.ForceSetCurSkyGlow(1f);
         map.powerNetManager.UpdatePowerNetsAndConnections_First();
-        UpdateDesiredPowerOutputForAllGenerators(map);
-        EnsureBatteriesConnectedAndMakeSense(map);
-        EnsurePowerUsersConnected(map);
-        EnsureGeneratorsConnectedAndMakeSense(map);
+        updateDesiredPowerOutputForAllGenerators(map);
+        ensureBatteriesConnectedAndMakeSense(map);
+        ensurePowerUsersConnected(map);
+        ensureGeneratorsConnectedAndMakeSense(map);
         tmpThings.Clear();
     }
 
-    private void UpdateDesiredPowerOutputForAllGenerators(Map map)
+    private void updateDesiredPowerOutputForAllGenerators(Map map)
     {
         tmpThings.Clear();
         tmpThings.AddRange(map.listerThings.ThingsInGroup(ThingRequestGroup.BuildingArtificial));
         foreach (var thing in tmpThings)
         {
-            if (IsPowerGenerator(thing))
+            if (isPowerGenerator(thing))
             {
                 thing.TryGetComp<CompPowerPlant>()?.UpdateDesiredPowerOutput();
             }
         }
     }
 
-    private void EnsureBatteriesConnectedAndMakeSense(Map map)
+    private void ensureBatteriesConnectedAndMakeSense(Map map)
     {
         tmpThings.Clear();
         tmpThings.AddRange(map.listerThings.ThingsInGroup(ThingRequestGroup.BuildingArtificial));
@@ -70,25 +70,25 @@ public class GenStep_LargePower : GenStep
             }
 
             var powerNet = compPowerBattery.PowerNet;
-            if (powerNet != null && HasAnyPowerGenerator(powerNet))
+            if (powerNet != null && hasAnyPowerGenerator(powerNet))
             {
                 continue;
             }
 
             map.powerNetManager.UpdatePowerNetsAndConnections_First();
-            if (TryFindClosestReachableNet(compPowerBattery.parent.Position, HasAnyPowerGenerator, map,
+            if (tryFindClosestReachableNet(compPowerBattery.parent.Position, hasAnyPowerGenerator, map,
                     out var foundNet, out var closestTransmitter))
             {
                 map.floodFiller.ReconstructLastFloodFillPath(closestTransmitter, tmpCells);
-                if (canSpawnPowerGenerators)
+                if (CanSpawnPowerGenerators)
                 {
                     var count = tmpCells.Count;
-                    var chance = Mathf.InverseLerp(MaxDistanceBetweenBatteryAndTransmitter.min,
-                        MaxDistanceBetweenBatteryAndTransmitter.max, count);
-                    if (Rand.Chance(chance) && TrySpawnPowerGeneratorNear(compPowerBattery.parent.Position, map,
+                    var chance = Mathf.InverseLerp(maxDistanceBetweenBatteryAndTransmitter.min,
+                        maxDistanceBetweenBatteryAndTransmitter.max, count);
+                    if (Rand.Chance(chance) && trySpawnPowerGeneratorNear(compPowerBattery.parent.Position, map,
                             compPowerBattery.parent.Faction, out var newPowerGenerator))
                     {
-                        SpawnTransmitters(compPowerBattery.parent.Position, newPowerGenerator.Position, map,
+                        spawnTransmitters(compPowerBattery.parent.Position, newPowerGenerator.Position, map,
                             compPowerBattery.parent.Faction);
                         foundNet = null;
                     }
@@ -96,25 +96,25 @@ public class GenStep_LargePower : GenStep
 
                 if (foundNet != null)
                 {
-                    SpawnTransmitters(tmpCells, map, compPowerBattery.parent.Faction);
+                    spawnTransmitters(tmpCells, map, compPowerBattery.parent.Faction);
                 }
             }
-            else if (canSpawnPowerGenerators && TrySpawnPowerGeneratorNear(compPowerBattery.parent.Position, map,
+            else if (CanSpawnPowerGenerators && trySpawnPowerGeneratorNear(compPowerBattery.parent.Position, map,
                          compPowerBattery.parent.Faction, out var newPowerGenerator2))
             {
-                SpawnTransmitters(compPowerBattery.parent.Position, newPowerGenerator2.Position, map,
+                spawnTransmitters(compPowerBattery.parent.Position, newPowerGenerator2.Position, map,
                     compPowerBattery.parent.Faction);
             }
         }
     }
 
-    private void EnsurePowerUsersConnected(Map map)
+    private void ensurePowerUsersConnected(Map map)
     {
         tmpThings.Clear();
         tmpThings.AddRange(map.listerThings.ThingsInGroup(ThingRequestGroup.BuildingArtificial));
         foreach (var thing in tmpThings)
         {
-            if (!IsPowerUser(thing))
+            if (!isPowerUser(thing))
             {
                 continue;
             }
@@ -128,39 +128,39 @@ public class GenStep_LargePower : GenStep
             }
 
             map.powerNetManager.UpdatePowerNetsAndConnections_First();
-            if (TryFindClosestReachableNet(powerComp.parent.Position,
+            if (tryFindClosestReachableNet(powerComp.parent.Position,
                     x => x.CurrentEnergyGainRate() -
                         (powerComp.Props.PowerConsumption * CompPower.WattsToWattDaysPerTick) > 1E-07f, map,
                     out _, out var closestTransmitter))
             {
                 map.floodFiller.ReconstructLastFloodFillPath(closestTransmitter, tmpCells);
                 var canAndConnect = false;
-                if (canSpawnPowerGenerators && thing is Building_Turret && tmpCells.Count > 13)
+                if (CanSpawnPowerGenerators && thing is Building_Turret && tmpCells.Count > 13)
                 {
-                    canAndConnect = TrySpawnPowerGeneratorAndBatteryIfCanAndConnect(thing, map);
+                    canAndConnect = trySpawnPowerGeneratorAndBatteryIfCanAndConnect(thing, map);
                 }
 
                 if (!canAndConnect)
                 {
-                    SpawnTransmitters(tmpCells, map, thing.Faction);
+                    spawnTransmitters(tmpCells, map, thing.Faction);
                 }
 
                 TryTurnOnImmediately(powerComp, map);
             }
-            else if (canSpawnPowerGenerators && TrySpawnPowerGeneratorAndBatteryIfCanAndConnect(thing, map))
+            else if (CanSpawnPowerGenerators && trySpawnPowerGeneratorAndBatteryIfCanAndConnect(thing, map))
             {
                 TryTurnOnImmediately(powerComp, map);
             }
-            else if (TryFindClosestReachableNet(powerComp.parent.Position, x => x.CurrentStoredEnergy() > 1E-07f, map,
+            else if (tryFindClosestReachableNet(powerComp.parent.Position, x => x.CurrentStoredEnergy() > 1E-07f, map,
                          out _, out closestTransmitter))
             {
                 map.floodFiller.ReconstructLastFloodFillPath(closestTransmitter, tmpCells);
-                SpawnTransmitters(tmpCells, map, thing.Faction);
+                spawnTransmitters(tmpCells, map, thing.Faction);
             }
-            else if (canSpawnBatteries &&
-                     TrySpawnBatteryNear(thing.Position, map, thing.Faction, out var newBattery))
+            else if (CanSpawnBatteries &&
+                     trySpawnBatteryNear(thing.Position, map, thing.Faction, out var newBattery))
             {
-                SpawnTransmitters(thing.Position, newBattery.Position, map, thing.Faction);
+                spawnTransmitters(thing.Position, newBattery.Position, map, thing.Faction);
                 if (newBattery.GetComp<CompPowerBattery>().StoredEnergy > 0f)
                 {
                     TryTurnOnImmediately(powerComp, map);
@@ -169,43 +169,43 @@ public class GenStep_LargePower : GenStep
         }
     }
 
-    private void EnsureGeneratorsConnectedAndMakeSense(Map map)
+    private void ensureGeneratorsConnectedAndMakeSense(Map map)
     {
         tmpThings.Clear();
         tmpThings.AddRange(map.listerThings.ThingsInGroup(ThingRequestGroup.BuildingArtificial));
         foreach (var thing in tmpThings)
         {
-            if (!IsPowerGenerator(thing))
+            if (!isPowerGenerator(thing))
             {
                 continue;
             }
 
             var powerNet = thing.TryGetComp<CompPower>().PowerNet;
-            if (powerNet != null && HasAnyPowerUser(powerNet))
+            if (powerNet != null && hasAnyPowerUser(powerNet))
             {
                 continue;
             }
 
             map.powerNetManager.UpdatePowerNetsAndConnections_First();
-            if (!TryFindClosestReachableNet(thing.Position, HasAnyPowerUser, map, out var _,
+            if (!tryFindClosestReachableNet(thing.Position, hasAnyPowerUser, map, out _,
                     out var closestTransmitter))
             {
                 continue;
             }
 
             map.floodFiller.ReconstructLastFloodFillPath(closestTransmitter, tmpCells);
-            SpawnTransmitters(tmpCells, map, thing.Faction);
+            spawnTransmitters(tmpCells, map, thing.Faction);
         }
     }
 
-    private bool IsPowerUser(Thing thing)
+    private static bool isPowerUser(Thing thing)
     {
         var compPowerTrader = thing.TryGetComp<CompPowerTrader>();
         return compPowerTrader != null && (compPowerTrader.PowerOutput < 0f ||
                                            !compPowerTrader.PowerOn && compPowerTrader.Props.PowerConsumption > 0f);
     }
 
-    private bool IsPowerGenerator(Thing thing)
+    private static bool isPowerGenerator(Thing thing)
     {
         if (thing.TryGetComp<CompPowerPlant>() != null)
         {
@@ -217,12 +217,12 @@ public class GenStep_LargePower : GenStep
                                            !compPowerTrader.PowerOn && compPowerTrader.Props.PowerConsumption < 0f);
     }
 
-    private bool HasAnyPowerGenerator(PowerNet net)
+    private bool hasAnyPowerGenerator(PowerNet net)
     {
         var powerComps = net.powerComps;
         foreach (var powerTrader in powerComps)
         {
-            if (IsPowerGenerator(powerTrader.parent))
+            if (isPowerGenerator(powerTrader.parent))
             {
                 return true;
             }
@@ -231,12 +231,12 @@ public class GenStep_LargePower : GenStep
         return false;
     }
 
-    private bool HasAnyPowerUser(PowerNet net)
+    private static bool hasAnyPowerUser(PowerNet net)
     {
         var powerComps = net.powerComps;
         foreach (var powerTrader in powerComps)
         {
-            if (IsPowerUser(powerTrader.parent))
+            if (isPowerUser(powerTrader.parent))
             {
                 return true;
             }
@@ -245,13 +245,13 @@ public class GenStep_LargePower : GenStep
         return false;
     }
 
-    private bool TryFindClosestReachableNet(IntVec3 root, Predicate<PowerNet> predicate, Map map, out PowerNet foundNet,
+    private bool tryFindClosestReachableNet(IntVec3 root, Predicate<PowerNet> predicate, Map map, out PowerNet foundNet,
         out IntVec3 closestTransmitter)
     {
         tmpPowerNetPredicateResults.Clear();
         PowerNet foundNetLocal = null;
         var closestTransmitterLocal = IntVec3.Invalid;
-        map.floodFiller.FloodFill(root, x => EverPossibleToTransmitPowerAt(x, map), delegate(IntVec3 x)
+        map.floodFiller.FloodFill(root, x => everPossibleToTransmitPowerAt(x, map), delegate(IntVec3 x)
         {
             var powerNet = x.GetTransmitter(map)?.GetComp<CompPower>().PowerNet;
             if (powerNet == null)
@@ -287,7 +287,7 @@ public class GenStep_LargePower : GenStep
         return false;
     }
 
-    private void SpawnTransmitters(List<IntVec3> cells, Map map, Faction faction)
+    private static void spawnTransmitters(List<IntVec3> cells, Map map, Faction faction)
     {
         for (var i = 0; i < cells.Count; i++)
         {
@@ -301,10 +301,10 @@ public class GenStep_LargePower : GenStep
         }
     }
 
-    private void SpawnTransmitters(IntVec3 start, IntVec3 end, Map map, Faction faction)
+    private void spawnTransmitters(IntVec3 start, IntVec3 end, Map map, Faction faction)
     {
         var foundPath = false;
-        map.floodFiller.FloodFill(start, x => EverPossibleToTransmitPowerAt(x, map), delegate(IntVec3 x)
+        map.floodFiller.FloodFill(start, x => everPossibleToTransmitPowerAt(x, map), delegate(IntVec3 x)
         {
             if (x != end)
             {
@@ -320,16 +320,16 @@ public class GenStep_LargePower : GenStep
         }
 
         map.floodFiller.ReconstructLastFloodFillPath(end, tmpTransmitterCells);
-        SpawnTransmitters(tmpTransmitterCells, map, faction);
+        spawnTransmitters(tmpTransmitterCells, map, faction);
     }
 
-    private bool TrySpawnPowerTransmittingBuildingNear(IntVec3 position, Map map, Faction faction, ThingDef thingDef,
+    private bool trySpawnPowerTransmittingBuildingNear(IntVec3 position, Map map, Faction faction, ThingDef thingDef,
         out Building newBuilding, Predicate<IntVec3> extraValidator = null)
     {
         var traverseParams = TraverseParms.For(TraverseMode.PassAllDestroyableThings);
         if (RCellFinder.TryFindRandomCellNearWith(position, delegate(IntVec3 x)
             {
-                if (!x.Standable(map) || x.Roofed(map) || !EverPossibleToTransmitPowerAt(x, map))
+                if (!x.Standable(map) || x.Roofed(map) || !everPossibleToTransmitPowerAt(x, map))
                 {
                     return false;
                 }
@@ -360,9 +360,9 @@ public class GenStep_LargePower : GenStep
         return false;
     }
 
-    private bool TrySpawnPowerGeneratorNear(IntVec3 position, Map map, Faction faction, out Building newPowerGenerator)
+    private bool trySpawnPowerGeneratorNear(IntVec3 position, Map map, Faction faction, out Building newPowerGenerator)
     {
-        if (!TrySpawnPowerTransmittingBuildingNear(position, map, faction, ThingDefOf.SolarGenerator,
+        if (!trySpawnPowerTransmittingBuildingNear(position, map, faction, ThingDefOf.SolarGenerator,
                 out newPowerGenerator))
         {
             return false;
@@ -373,10 +373,10 @@ public class GenStep_LargePower : GenStep
         return true;
     }
 
-    private bool TrySpawnBatteryNear(IntVec3 position, Map map, Faction faction, out Building newBattery)
+    private bool trySpawnBatteryNear(IntVec3 position, Map map, Faction faction, out Building newBattery)
     {
-        Predicate<IntVec3> extraValidator = null;
-        if (spawnRoofOverNewBatteries)
+        Predicate<IntVec3> extraValidator;
+        if (SpawnRoofOverNewBatteries)
         {
             extraValidator = delegate(IntVec3 x)
             {
@@ -402,7 +402,7 @@ public class GenStep_LargePower : GenStep
             };
         }
 
-        if (!TrySpawnPowerTransmittingBuildingNear(position, map, faction, ThingDefOf.Battery, out newBattery,
+        if (!trySpawnPowerTransmittingBuildingNear(position, map, faction, ThingDefOf.Battery, out newBattery,
                 extraValidator))
         {
             return false;
@@ -410,49 +410,44 @@ public class GenStep_LargePower : GenStep
 
         var randomInRange = newBatteriesInitialStoredEnergyPctRange.RandomInRange;
         newBattery.GetComp<CompPowerBattery>().SetStoredEnergyPct(randomInRange);
-        if (spawnRoofOverNewBatteries)
+        if (SpawnRoofOverNewBatteries)
         {
-            SpawnRoofOver(newBattery);
+            spawnRoofOver(newBattery);
         }
 
         return true;
     }
 
-    private bool TrySpawnPowerGeneratorAndBatteryIfCanAndConnect(Thing forThing, Map map)
+    private bool trySpawnPowerGeneratorAndBatteryIfCanAndConnect(Thing forThing, Map map)
     {
-        if (!canSpawnPowerGenerators)
-        {
-            return false;
-        }
-
         var position = forThing.Position;
-        if (canSpawnBatteries)
+        if (CanSpawnBatteries)
         {
             var chance = forThing is not Building_Turret ? 0.1f : 1f;
             if (Rand.Chance(chance) &&
-                TrySpawnBatteryNear(forThing.Position, map, forThing.Faction, out var newBattery))
+                trySpawnBatteryNear(forThing.Position, map, forThing.Faction, out var newBattery))
             {
-                SpawnTransmitters(forThing.Position, newBattery.Position, map, forThing.Faction);
+                spawnTransmitters(forThing.Position, newBattery.Position, map, forThing.Faction);
                 position = newBattery.Position;
             }
         }
 
-        if (!TrySpawnPowerGeneratorNear(position, map, forThing.Faction, out var newPowerGenerator))
+        if (!trySpawnPowerGeneratorNear(position, map, forThing.Faction, out var newPowerGenerator))
         {
             return false;
         }
 
-        SpawnTransmitters(position, newPowerGenerator.Position, map, forThing.Faction);
+        spawnTransmitters(position, newPowerGenerator.Position, map, forThing.Faction);
         return true;
     }
 
-    private bool EverPossibleToTransmitPowerAt(IntVec3 c, Map map)
+    private static bool everPossibleToTransmitPowerAt(IntVec3 c, Map map)
     {
         return c.GetTransmitter(map) != null ||
                GenConstruct.CanBuildOnTerrain(ThingDefOf.PowerConduit, c, map, Rot4.North);
     }
 
-    private void TryTurnOnImmediately(CompPowerTrader powerComp, Map map)
+    private static void TryTurnOnImmediately(CompPowerTrader powerComp, Map map)
     {
         if (powerComp.PowerOn)
         {
@@ -466,7 +461,7 @@ public class GenStep_LargePower : GenStep
         }
     }
 
-    private void SpawnRoofOver(Thing thing)
+    private static void spawnRoofOver(Thing thing)
     {
         var cellRect = thing.OccupiedRect();
         var roofed = true;

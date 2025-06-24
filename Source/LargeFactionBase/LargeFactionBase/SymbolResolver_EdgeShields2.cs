@@ -10,10 +10,7 @@ public class SymbolResolver_EdgeShields2 : SymbolResolver
     {
         var map = BaseGen.globalSettings.map;
         var rect = rp.rect;
-        if (rp.wallStuff == null)
-        {
-            rp.wallStuff = BaseGenUtility.RandomCheapWallStuff(Faction.OfPlayer);
-        }
+        rp.wallStuff ??= BaseGenUtility.RandomCheapWallStuff(Faction.OfPlayer);
 
         var num = 1;
         foreach (var edgeCell in rect.EdgeCells)

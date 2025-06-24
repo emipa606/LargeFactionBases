@@ -7,7 +7,7 @@ namespace LargeFactionBase;
 
 public class SymbolResolver_Settlement2 : SymbolResolver
 {
-    public static readonly FloatRange DefaultPawnsPoints = new FloatRange(1150f, 1600f);
+    public static readonly FloatRange DefaultPawnsPoints = new(1150f, 1600f);
 
     public override void Resolve(ResolveParams rp)
     {

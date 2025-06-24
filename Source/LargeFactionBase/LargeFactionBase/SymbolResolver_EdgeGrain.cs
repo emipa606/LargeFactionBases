@@ -6,9 +6,9 @@ namespace LargeFactionBase;
 
 public class SymbolResolver_EdgeGrain : SymbolResolver
 {
-    private static readonly IntRange LineLengthRange = new IntRange(1, 1);
+    private static readonly IntRange LineLengthRange = new(1, 1);
 
-    private static readonly IntRange GapLengthRange = new IntRange(12, 16);
+    private static readonly IntRange GapLengthRange = new(12, 16);
 
     public override void Resolve(ResolveParams rp)
     {

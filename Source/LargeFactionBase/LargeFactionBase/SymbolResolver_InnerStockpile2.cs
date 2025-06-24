@@ -22,7 +22,7 @@ public class SymbolResolver_InnerStockpile2 : SymbolResolver
         else if (rp.stockpileConcreteContents != null)
         {
             var num = Mathf.CeilToInt(Mathf.Sqrt(rp.stockpileConcreteContents.Count));
-            if (!TryFindRandomInnerRect(rp.rect, num, out rect, num * num, out var _))
+            if (!TryFindRandomInnerRect(rp.rect, num, out rect, num * num, out _))
             {
                 rect = rp.rect;
             }
@@ -45,7 +45,7 @@ public class SymbolResolver_InnerStockpile2 : SymbolResolver
         }
 
         return maxValidCellsFound != 0 &&
-               TryFindRandomInnerRect(outerRect, size, out rect, maxValidCellsFound, out var _);
+               TryFindRandomInnerRect(outerRect, size, out rect, maxValidCellsFound, out _);
     }
 
     private bool TryFindRandomInnerRect(CellRect outerRect, int size, out CellRect rect, int minValidCells,

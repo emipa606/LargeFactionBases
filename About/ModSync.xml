@@ -2,7 +2,7 @@
 <ModSyncNinjaData>
   <ID>f1041449-d4f7-4794-8647-f20c929f0f24</ID>
   <ModName>Large Faction Bases (Continued)</ModName>
-  <Version>1.5.0</Version>
+  <Version>1.6.0</Version>
   <SaveBreaking>False</SaveBreaking>
   <Host name="Github">
     <Owner>emipa606</Owner>
@@ -12,7 +12,4 @@
     <Branch>master</Branch>
   </Host>
 </ModSyncNinjaData>
-
-
-
 
