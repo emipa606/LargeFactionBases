@@ -93,7 +93,7 @@ public class SymbolResolver_EdgeDefense2 : SymbolResolver
         if (num > 0)
         {
             var singlePawnLord = rp.singlePawnLord ??
-                                 LordMaker.MakeNewLord(faction, new LordJob_DefendBase(faction, rp.rect.CenterCell),
+                                 LordMaker.MakeNewLord(faction, new LordJob_DefendBase(faction, rp.rect.CenterCell, 0),
                                      map);
             for (var i = 0; i < num; i++)
             {
