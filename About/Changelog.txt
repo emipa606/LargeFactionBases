@@ -1,5 +1,8 @@
 # Changelog for LargeFactionBases
 
+1.6.2 - Excludes the cube-sculpture from possible rewards
+
+
 1.6.1 - Fixed defence worker since rimworld update
 
 

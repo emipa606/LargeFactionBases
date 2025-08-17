@@ -153,6 +153,12 @@
                   <li>BuildingsArt</li>
                   <li>BodyPartsBionic</li>
                 </categories>
+                <disallowedThingDefs MayRequire="Ludeon.RimWorld.Anomaly">
+                  <li>DirtCubeSculpture</li>
+                  <li>StoneCubeSculpture</li>
+                  <li>SandCubeSculpture</li>
+                  <li>ScrapCubeSculpture</li>
+                </disallowedThingDefs>
               </filter>
             </fixedParams>
           </thingSetMaker>
