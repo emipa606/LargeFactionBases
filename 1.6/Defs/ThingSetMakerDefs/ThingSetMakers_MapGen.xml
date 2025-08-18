@@ -98,6 +98,10 @@
                 <categories>
                   <li>ResourcesRaw</li>
                 </categories>
+                <disallowedThingDefs>
+                  <li MayRequire="Ludeon.RimWorld.Odyssey">GravlitePanel</li>
+                  <li MayRequire="Ludeon.RimWorld.Odyssey">BlocksVacstone</li>
+                </disallowedThingDefs>
               </filter>
             </fixedParams>
           </thingSetMaker>
