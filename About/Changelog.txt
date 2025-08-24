@@ -1,5 +1,8 @@
 # Changelog for LargeFactionBases
 
+1.6.4 - Fixed thingsetmaker
+
+
 1.6.3 - Excludes gravlite panels and vacstone from possible rewards
 
 

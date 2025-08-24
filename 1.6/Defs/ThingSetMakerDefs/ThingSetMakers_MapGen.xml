@@ -157,11 +157,11 @@
                   <li>BuildingsArt</li>
                   <li>BodyPartsBionic</li>
                 </categories>
-                <disallowedThingDefs MayRequire="Ludeon.RimWorld.Anomaly">
-                  <li>DirtCubeSculpture</li>
-                  <li>StoneCubeSculpture</li>
-                  <li>SandCubeSculpture</li>
-                  <li>ScrapCubeSculpture</li>
+                <disallowedThingDefs>
+                  <li MayRequire="Ludeon.RimWorld.Anomaly">DirtCubeSculpture</li>
+                  <li MayRequire="Ludeon.RimWorld.Anomaly">StoneCubeSculpture</li>
+                  <li MayRequire="Ludeon.RimWorld.Anomaly">SandCubeSculpture</li>
+                  <li MayRequire="Ludeon.RimWorld.Anomaly">ScrapCubeSculpture</li>
                 </disallowedThingDefs>
               </filter>
             </fixedParams>

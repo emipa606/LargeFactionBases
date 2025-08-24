@@ -3,13 +3,13 @@
   "CanAdd": "0",
   "CanRemove": "0",
   "PreviewVersion": "1.6",
-  "LastXmlCleaning": "2025-08-18T21:41:01.7875889+02:00",
+  "LastXmlCleaning": "2025-08-24T20:39:17.7850154+02:00",
   "SocialImageSet": true,
   "SearchTags": " high-risk challenge",
   "Patches": true,
   "Defs": true,
   "Assemblies": true,
   "LinesOfCode": 153301,
-  "LinesOfXML": 30185,
+  "LinesOfXML": 30296,
   "CodeBaseSize": 83
 }
