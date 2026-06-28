@@ -6,4 +6,23 @@
     <BuildType Name="Release" />
   </Configurations>
   <Project Path="LargeFactionBase/LargeFactionBase.csproj" />
+  <Folder Name="/XML/1.6/Patches/">
+    <File Path="../1.6/Patches/RimWar_Large.xml" />
+  </Folder>
+  <Folder Name="/XML/1.6/Defs/ThingDef/">
+    <File Path="../1.6/Defs/ThingDef/IED.xml" />
+  </Folder>
+  <Folder Name="/XML/1.6/Defs/Rules/">
+    <File Path="../1.6/Defs/Rules/Rules_Indoors.xml" />
+    <File Path="../1.6/Defs/Rules/Rules.xml" />
+  </Folder>
+  <Folder Name="/XML/About/">
+    <File Path="../About/about.xml" />
+  </Folder>
+  <Folder Name="/XML/1.6/Defs/ThingSetMakerDefs/">
+    <File Path="../1.6/Defs/ThingSetMakerDefs/ThingSetMakers_MapGen.xml" />
+  </Folder>
+  <Folder Name="/XML/1.6/Defs/DutyDef/">
+    <File Path="../1.6/Defs/DutyDef/Duties_Settlement2.xml" />
+  </Folder>
 </Solution>

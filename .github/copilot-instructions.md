@@ -1,40 +1,46 @@
 # GitHub Copilot Instructions for Large Faction Bases (Continued) Mod
 
 ## Mod Overview and Purpose
-
-**Mod Name:** Large Faction Bases (Continued)  
-**Description:** This mod enhances the gameplay experience in RimWorld by generating larger and more complex faction bases. These bases evolve over time, increasing in size and manpower, while taking into account the difficulty level and introducing an element of randomness. The goal is to provide a high-risk, high-reward challenge for players who seek to engage with more formidable foes.
-
-The mod is safe to add or remove in existing games. To ensure compatibility with other mods that alter faction bases, users should reference "Choose your enemy base" from the BrokenBed mod.
+The "Large Faction Bases (Continued)" mod for RimWorld aims to enhance the faction base experience by generating larger, more dynamic faction bases. These bases grow in size and manpower over time, providing a challenging gameplay experience that scales with difficulty level and incorporates randomness. This mod adds a high-risk, high-reward challenge for players seeking to test their strategies against formidable opponents. It is designed to be safe to add or remove from games at any stage.
 
 ## Key Features and Systems
-
-- **Evolving Faction Bases:** Bases dynamically change in size and manpower based on time progression, difficulty level, and random factors.
-- **Complex Power Networks:** Advanced power network system allowing nuanced control and connection logic for generators, batteries, and power users.
-- **Diverse Symbol Resolvers:** Multiple `SymbolResolver` implementations introduce diverse structures and item placements within faction bases.
+- **Dynamic Base Growth**: Faction bases expand in size and workforce over time, creating engaging and evolving challenges.
+- **Difficulty Scaling**: Base complexity and strength scale with the game's difficulty settings, making the challenge appropriate for a variety of player skill levels.
+- **Compatibility Focus**: The mod works alongside others that modify faction bases, with recommended adjustments available through "Choose your enemy base" by BrokenBed.
 
 ## Coding Patterns and Conventions
-
-- **Class Naming:** Classes generally follow a descriptive naming pattern, denoting their role in the generation process, e.g., `GenStep_LargeFactionBase`, `SymbolResolver_EdgeDefense2`.
-- **Method Signature Consistency:** Methods are named using camelCase, clearly describing their action and often indicating the expected input (`tryFindClosestReachableNet`, `spawnTransmitters`).
-- **Comments and Documentation:** Descriptive comments are encouraged to clarify the purpose of complex logic, especially where randomization or evolutionary mechanics are involved.
+- **Class Naming**: Classes are prefixed to denote their purpose or the system they belong to, such as `GenStep_`, `SymbolResolver_`, and `LordJob_`.
+- **Method Convention**: Methods typically begin with verbs to describe their functionality clearly, such as `updateDesiredPowerOutputForAllGenerators`, `trySpawnBatteryNear`, etc.
+- **Static Definitions**: Utilizes static classes like `Large_DefOf` for centralizing definitions that need to be accessible globally within the mod.
 
 ## XML Integration
-
-- **XML Definitions:** Definitions such as `PawnKindDef`, `ThingSetMakerDef`, and others are statically declared in class files like `Large_DefOf.cs` and `Large_PawnKindDefOf.cs`.
-- **XML Modding Structure:** The integration of custom XML configurations follows RimWorld's modding guidelines to define new pawn kinds, duties, and item sets which the C# code then references.
+- XML files are used to define new content data such as pawns, buildings, and faction details.
+- XML structure benefits from using clear and concise element names to ensure easy interpretability by both the game engine and modders.
+- Definitions generally align with vanilla content styles to maintain compatibility and stability.
 
 ## Harmony Patching
-
-- **Harmony Use:** Although specifics of Harmony patches are not detailed in the summary, it's suggested to leverage Harmony for altering or extending existing game mechanics and behaviors distinctly.
-- **Patch Organization:** Keep patches organized by their target functionality and ensure they are grouped logically within the project's structure.
+- Harmony is utilized to patch vanilla RimWorld methods to integrate functionalities such as expanding faction bases without overriding core game files.
+- Identify core methods that need adjustment, then write Harmony patches as needed to inject or override behaviors.
+- Use descriptive annotations and organize patches neatly to ensure clear understanding of what vanilla method interactions are being modified.
 
 ## Suggestions for Copilot
+1. Utilize Copilot to suggest method names that conform to the existing naming conventions, ensuring consistency across files.
+2. Leverage Copilot for boilerplate code for new Harmony patches, reducing the time spent on repetitive code structures.
+3. Use Copilot to generate XML definitions by suggesting possible values or completing large repetitive sections.
+4. Assist with creating test cases or debugging snippets by predicting potential errors or implementing common checks.
+5. Utilize Copilot for documentation generation by auto-completing or suggesting documentation comments based on method functionality.
 
-- **Class Expansions:** When expanding class functionality, suggest new methods that complement existing ones, e.g., additional power management utilities in `GenStep_LargePower`.
-- **Randomization Logic:** Generate code snippets that introduce and manage randomness in base evolution, respecting existing patterns.
-- **Error Handling:** Implement robust error handling in methods where base connectivity might fail, such as in `tryFindClosestReachableNet`.
-- **Consistent Naming:** Ensure new names for variables, methods, or classes are consistent with established naming patterns.
-- **New Feature Prototypes:** For new features or systems, provide prototype implementations with comments to explain the flow and logic.
+### Additional Resources
+- Join the Discord channel provided in the mod description for community support and error reporting.
+- Use tools like RimSort to organize mods for better compatibility and performance.
+- Post logs using the Log Uploader when reporting issues to provide sufficient information for troubleshooting.
 
-By following these instructions, developers can maintain consistency and code quality while leveraging Copilot to expand and enhance the Large Faction Bases (Continued) mod.
+This file should act as a guide for getting the most out of GitHub Copilot while working with the "Large Faction Bases (Continued)" mod for RimWorld. Happy modding!
+
+## Project Solution Guidelines
+- Relevant mod XML files are included as Solution Items under the solution folder named XML, these can be read and modified from within the solution.
+- Use these in-solution XML files as the primary files for reference and modification.
+- The `.github/copilot-instructions.md` file is included in the solution under the `.github` solution folder, so it should be read/modified from within the solution instead of using paths outside the solution. Update this file once only, as it and the parent-path solution reference point to the same file in this workspace.
+- When making functional changes in this mod, ensure the documented features stay in sync with implementation; use the in-solution `.github` copy as the primary file.
+- In the solution is also a project called Assembly-CSharp, containing a read-only version of the decompiled game source, for reference and debugging purposes.
+- For any new documentation, update this copilot-instructions.md file rather than creating separate documentation files.
