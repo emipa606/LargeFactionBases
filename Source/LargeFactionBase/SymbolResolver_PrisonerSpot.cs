@@ -2,6 +2,8 @@ using RimWorld;
 using RimWorld.BaseGen;
 using Verse;
 
+namespace LargeFactionBase;
+
 public class SymbolResolver_PrisonerSpot : SymbolResolver
 {
     public override void Resolve(ResolveParams rp)

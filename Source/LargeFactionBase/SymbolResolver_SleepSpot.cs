@@ -1,6 +1,8 @@
 using RimWorld;
 using RimWorld.BaseGen;
 
+namespace LargeFactionBase;
+
 public class SymbolResolver_SleepSpot : SymbolResolver
 {
     public override void Resolve(ResolveParams rp)

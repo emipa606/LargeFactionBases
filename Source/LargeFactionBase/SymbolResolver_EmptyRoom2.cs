@@ -1,6 +1,8 @@
 using RimWorld.BaseGen;
 using Verse;
 
+namespace LargeFactionBase;
+
 public class SymbolResolver_EmptyRoom2 : SymbolResolver
 {
     public override void Resolve(ResolveParams rp)

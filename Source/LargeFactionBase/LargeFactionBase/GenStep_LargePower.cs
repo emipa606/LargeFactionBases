@@ -48,12 +48,9 @@ public class GenStep_LargePower : GenStep
     {
         tmpThings.Clear();
         tmpThings.AddRange(map.listerThings.ThingsInGroup(ThingRequestGroup.BuildingArtificial));
-        foreach (var thing in tmpThings)
+        foreach (var thing in tmpThings.Where(isPowerGenerator))
         {
-            if (isPowerGenerator(thing))
-            {
-                thing.TryGetComp<CompPowerPlant>()?.UpdateDesiredPowerOutput();
-            }
+            thing.TryGetComp<CompPowerPlant>()?.UpdateDesiredPowerOutput();
         }
     }
 
@@ -217,32 +214,14 @@ public class GenStep_LargePower : GenStep
                                            !compPowerTrader.PowerOn && compPowerTrader.Props.PowerConsumption < 0f);
     }
 
-    private bool hasAnyPowerGenerator(PowerNet net)
+    private static bool hasAnyPowerGenerator(PowerNet net)
     {
-        var powerComps = net.powerComps;
-        foreach (var powerTrader in powerComps)
-        {
-            if (isPowerGenerator(powerTrader.parent))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return net.powerComps.Any(powerTrader => isPowerGenerator(powerTrader.parent));
     }
 
     private static bool hasAnyPowerUser(PowerNet net)
     {
-        var powerComps = net.powerComps;
-        foreach (var powerTrader in powerComps)
-        {
-            if (isPowerUser(powerTrader.parent))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return net.powerComps.Any(powerTrader => isPowerUser(powerTrader.parent));
     }
 
     private bool tryFindClosestReachableNet(IntVec3 root, Predicate<PowerNet> predicate, Map map, out PowerNet foundNet,
@@ -301,7 +280,7 @@ public class GenStep_LargePower : GenStep
         }
     }
 
-    private void spawnTransmitters(IntVec3 start, IntVec3 end, Map map, Faction faction)
+    private static void spawnTransmitters(IntVec3 start, IntVec3 end, Map map, Faction faction)
     {
         var foundPath = false;
         map.floodFiller.FloodFill(start, x => everPossibleToTransmitPowerAt(x, map), delegate(IntVec3 x)
@@ -323,7 +302,8 @@ public class GenStep_LargePower : GenStep
         spawnTransmitters(tmpTransmitterCells, map, faction);
     }
 
-    private bool trySpawnPowerTransmittingBuildingNear(IntVec3 position, Map map, Faction faction, ThingDef thingDef,
+    private static bool trySpawnPowerTransmittingBuildingNear(IntVec3 position, Map map, Faction faction,
+        ThingDef thingDef,
         out Building newBuilding, Predicate<IntVec3> extraValidator = null)
     {
         var traverseParams = TraverseParms.For(TraverseMode.PassAllDestroyableThings);
@@ -339,13 +319,11 @@ public class GenStep_LargePower : GenStep
                     return false;
                 }
 
-                foreach (var item in GenAdj.OccupiedRect(x, Rot4.North, thingDef.size))
+                if (GenAdj.OccupiedRect(x, Rot4.North, thingDef.size).Any(item => !item.InBounds(map) ||
+                        item.Roofed(map) || item.GetEdifice(map) != null ||
+                        item.GetFirstItem(map) != null || item.GetTransmitter(map) != null))
                 {
-                    if (!item.InBounds(map) || item.Roofed(map) || item.GetEdifice(map) != null ||
-                        item.GetFirstItem(map) != null || item.GetTransmitter(map) != null)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
 
                 return extraValidator == null || extraValidator(x);
@@ -360,7 +338,8 @@ public class GenStep_LargePower : GenStep
         return false;
     }
 
-    private bool trySpawnPowerGeneratorNear(IntVec3 position, Map map, Faction faction, out Building newPowerGenerator)
+    private static bool trySpawnPowerGeneratorNear(IntVec3 position, Map map, Faction faction,
+        out Building newPowerGenerator)
     {
         if (!trySpawnPowerTransmittingBuildingNear(position, map, faction, ThingDefOf.SolarGenerator,
                 out newPowerGenerator))
@@ -388,13 +367,11 @@ public class GenStep_LargePower : GenStep
                     }
 
                     var thingList = intVec3.GetThingList(map);
-                    foreach (var thing in thingList)
+                    if (thingList.Any(thing =>
+                            thing.def.PlaceWorkers != null &&
+                            thing.def.PlaceWorkers.Any(y => y is PlaceWorker_NotUnderRoof)))
                     {
-                        if (thing.def.PlaceWorkers != null &&
-                            thing.def.PlaceWorkers.Any(y => y is PlaceWorker_NotUnderRoof))
-                        {
-                            return false;
-                        }
+                        return false;
                     }
                 }
 
@@ -481,15 +458,9 @@ public class GenStep_LargePower : GenStep
             return;
         }
 
-        var num = 0;
         var cellRect2 = cellRect.ExpandedBy(2);
-        foreach (var intVec3 in cellRect2)
-        {
-            if (intVec3.InBounds(thing.Map) && intVec3.GetRoofHolderOrImpassable(thing.Map) != null)
-            {
-                num++;
-            }
-        }
+        var num = cellRect2.Count(intVec3 =>
+            intVec3.InBounds(thing.Map) && intVec3.GetRoofHolderOrImpassable(thing.Map) != null);
 
         if (num < 2)
         {
@@ -518,12 +489,9 @@ public class GenStep_LargePower : GenStep
             return;
         }
 
-        foreach (var intVec3 in cellRect2)
+        foreach (var intVec3 in cellRect2.Where(intVec3 => intVec3.InBounds(thing.Map) && !intVec3.Roofed(thing.Map)))
         {
-            if (intVec3.InBounds(thing.Map) && !intVec3.Roofed(thing.Map))
-            {
-                thing.Map.roofGrid.SetRoof(intVec3, RoofDefOf.RoofConstructed);
-            }
+            thing.Map.roofGrid.SetRoof(intVec3, RoofDefOf.RoofConstructed);
         }
     }
 }

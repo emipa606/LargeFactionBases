@@ -7,7 +7,7 @@ namespace RimWorld;
 
 public class LordToil_DefendBase3(IntVec3 baseCenter) : LordToil
 {
-    public IntVec3 baseCenter = baseCenter;
+    private readonly IntVec3 baseCenter = baseCenter;
 
     public override IntVec3 FlagLoc => baseCenter;
 

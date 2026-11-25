@@ -57,7 +57,7 @@ public class GenStep_LargeFactionBase2 : GenStep
         var num11 = Mathf.Min(a, 0.8f);
         var num12 = (num5 * num11) + 0.85f;
         BaseGen.globalSettings.map = map;
-        var map2 = BaseGen.globalSettings?.map ?? Find.CurrentMap;
+        var map2 = BaseGen.globalSettings.map ?? Find.CurrentMap;
         var tile = map2.info.Tile;
         float num13 = WorldUtility.GetRimWarSettlementAtTile(tile).RimWarPoints;
         _ = WorldUtility.GetRimWarDataForFaction(faction).PointsFromSettlements;
@@ -73,12 +73,12 @@ public class GenStep_LargeFactionBase2 : GenStep
         var resolveParams2 = default(ResolveParams);
         resolveParams2.rect = resolveParams.rect.ExpandedBy(20);
         var persistentRandomValue2 = Find.World.info.persistentRandomValue;
-        var map3 = BaseGen.globalSettings?.map ?? Find.CurrentMap;
+        var map3 = BaseGen.globalSettings.map ?? Find.CurrentMap;
         var tile4 = map3.info.Tile;
         var num19 = Mathf.FloorToInt(tile4 * persistentRandomValue2 / 10f);
         var num20 = (tile4 * persistentRandomValue2) - (num19 * 10);
         var num21 = num20 / 10f;
-        if ((num21 < 0.7f) & ((int)resolveParams.faction.def.techLevel > 3))
+        if (num21 < 0.7f && (int)resolveParams.faction.def.techLevel > 3)
         {
             BaseGen.symbolStack.Push("extWalls", resolveParams2);
             var rect = resolveParams2.rect.ContractedBy(4);
@@ -111,7 +111,7 @@ public class GenStep_LargeFactionBase2 : GenStep
             }
         }
 
-        if ((num21 >= 0.7f) & ((int)resolveParams.faction.def.techLevel > 3))
+        if (num21 >= 0.7f && (int)resolveParams.faction.def.techLevel > 3)
         {
             var cellRect = resolveParams2.rect.ExpandedBy(1);
             var num23 = Mathf.Clamp(cellRect.Width, 1, Mathf.Min(cellRect.Width, cellRect.Height) / 2);
@@ -194,7 +194,7 @@ public class GenStep_LargeFactionBase2 : GenStep
             }
         }
 
-        if ((num21 < 0.7f) & ((int)resolveParams.faction.def.techLevel <= 3))
+        if (num21 < 0.7f && (int)resolveParams.faction.def.techLevel <= 3)
         {
             var rect5 = resolveParams2.rect.ExpandedBy(1);
             var num26 = Mathf.Clamp(rect5.Width, 1, Mathf.Min(rect5.Width, rect5.Height) / 2);
@@ -266,7 +266,7 @@ public class GenStep_LargeFactionBase2 : GenStep
             }
         }
 
-        if ((num21 >= 0.7f) & ((int)resolveParams.faction.def.techLevel <= 3))
+        if (num21 >= 0.7f && (int)resolveParams.faction.def.techLevel <= 3)
         {
             var rect8 = resolveParams2.rect.ExpandedBy(1);
             rect8.Width = Mathf.Clamp(rect8.Width, 1, Mathf.Min(rect8.Width, rect8.Height) / 2);

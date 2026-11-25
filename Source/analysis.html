@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="color-scheme" content="light dark">
+<title>Large Faction Bases (Continued) analysis</title>
+</head>
+<body>
+<h1>Large Faction Bases (Continued) analysis</h1>
+<h2 id="recommendations">Recommendations</h2>
+<h3 id="highest-priority">Highest Priority</h3>
+<ol>
+<li><strong>Fix Game Freeze on Faction Attack</strong>
+<ul>
+<li><strong>Implementation Idea:</strong> Introduce a check in <code>GenStep_LargeFactionBase.cs</code> to avoid division by zero and potential <code>NaN</code> values that cause the game to freeze. Ensure that <code>num9</code> is checked before performing the sine calculation.</li>
+<li><strong>Confidence:</strong> High, based on the fix provided by Astra and the described issue.</li>
+<li><strong>Source:</strong> Trello card <a href="https://trello.com/c/5ikqSrRV">Trello Card</a></li>
+</ul>
+</li>
+</ol>
+<h3 id="low-priority">Low Priority</h3>
+<ul>
+<li>None</li>
+</ul>
+<h2 id="semantic-summary-suggestions-no-trello-cards">Semantic-summary Suggestions (no Trello cards)</h2>
+<ul>
+<li>None</li>
+</ul>
+<h2 id="deferred-work">Deferred Work</h2>
+<ul>
+<li><strong>Unclear Issue:</strong>
+<ul>
+<li><strong>Title:</strong> Potential Division by Zero in <code>GenStep_LargeFactionBase.cs</code></li>
+<li><strong>Description:</strong> Review the rest of the codebase for similar potential division by zero issues that might cause instability or crashes.</li>
+<li><strong>Confidence:</strong> Medium, as the current fix addresses a specific instance but similar issues might exist.</li>
+<li><strong>Source:</strong> Semantic summary (no Trello card)</li>
+</ul>
+</li>
+</ul>
+
+</body>
+</html>

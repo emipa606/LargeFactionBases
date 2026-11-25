@@ -9,8 +9,16 @@ public class SymbolResolver_Corpse : SymbolResolver
         var num = rp.hivesCount ?? Rand.Range(1, 3);
         for (var i = 0; i < num; i++)
         {
-            var pawnKindDef = !(Rand.Value > 0.7f) ? PawnKindDefOf.Slave :
-                Rand.Value > 0.6f ? PawnKindDefOf.AncientSoldier : PawnKindDefOf.WellEquippedTraveler;
+            PawnKindDef pawnKindDef;
+            if (!(Rand.Value > 0.7f))
+            {
+                pawnKindDef = PawnKindDefOf.Slave;
+            }
+            else
+            {
+                pawnKindDef = Rand.Value > 0.6f ? PawnKindDefOf.AncientSoldier : PawnKindDefOf.WellEquippedTraveler;
+            }
+
             var faction = rp.faction;
             var request = new PawnGenerationRequest(pawnKindDef, faction, PawnGenerationContext.NonPlayer, -1, false,
                 false, false, false, false, 1f, true, true, true, true, false, false, false, false, false, 0f, 0f, null,

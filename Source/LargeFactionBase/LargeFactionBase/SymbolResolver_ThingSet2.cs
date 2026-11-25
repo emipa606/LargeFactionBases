@@ -13,7 +13,7 @@ public class SymbolResolver_ThingSet2 : SymbolResolver
         var thingSetMakerDef = rp.thingSetMakerDef ?? LargeFactionBase_ThingSetMakerDefOf.MapGen_DefaultStockpile2;
         var thingSetMakerParams = rp.thingSetMakerParams;
         ThingSetMakerParams parms;
-        if (thingSetMakerParams.HasValue)
+        if (thingSetMakerParams.HasValue && rp.thingSetMakerParams != null)
         {
             parms = rp.thingSetMakerParams.Value;
         }

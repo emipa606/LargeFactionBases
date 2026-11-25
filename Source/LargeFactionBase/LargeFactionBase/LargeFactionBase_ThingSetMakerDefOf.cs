@@ -3,7 +3,7 @@ using RimWorld;
 namespace LargeFactionBase;
 
 [DefOf]
-internal class LargeFactionBase_ThingSetMakerDefOf
+internal static class LargeFactionBase_ThingSetMakerDefOf
 {
     public static ThingSetMakerDef MapGen_DefaultStockpile2;
 

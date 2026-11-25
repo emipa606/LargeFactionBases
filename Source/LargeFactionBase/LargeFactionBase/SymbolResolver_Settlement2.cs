@@ -15,7 +15,7 @@ public class SymbolResolver_Settlement2 : SymbolResolver
         var faction = rp.faction ?? Find.FactionManager.RandomEnemyFaction();
         var num = 0;
         var edgeDefenseWidth = rp.edgeDefenseWidth;
-        if (edgeDefenseWidth.HasValue)
+        if (edgeDefenseWidth.HasValue && rp.edgeDefenseWidth != null)
         {
             num = rp.edgeDefenseWidth.Value;
         }

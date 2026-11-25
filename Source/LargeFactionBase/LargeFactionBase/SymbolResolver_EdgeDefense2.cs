@@ -97,7 +97,7 @@ public class SymbolResolver_EdgeDefense2 : SymbolResolver
                                      map);
             for (var i = 0; i < num; i++)
             {
-                var value = new PawnGenerationRequest(faction.RandomPawnKind(), faction,
+                var value = new PawnGenerationRequest(faction?.RandomPawnKind(), faction,
                     PawnGenerationContext.NonPlayer, -1, false, false, false, false, true, 1f, true, true, true, true,
                     false, false, false, false, false, 0f, 0f, null, 1f, null, null, null, null, null, null, null, null,
                     null, null, null, null, false, false, false, true, null, null, null, null, null, 1f);

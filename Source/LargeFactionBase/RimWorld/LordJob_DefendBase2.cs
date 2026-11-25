@@ -8,8 +8,8 @@ public class LordJob_DefendBase2(Faction faction, IntVec3 baseCenter) : LordJob
     public override StateGraph CreateGraph()
     {
         var stateGraph = new StateGraph();
-        var lordToil_DefendBase =
-            (LordToil_DefendBase2)(stateGraph.StartingToil = new LordToil_DefendBase2(baseCenter));
+        stateGraph.StartingToil = new LordToil_DefendBase2(baseCenter);
+        var lordToil_DefendBase = (LordToil_DefendBase2)stateGraph.StartingToil;
         var lordToil_DefendBase2 = new LordToil_DefendBase2(baseCenter);
         stateGraph.AddToil(lordToil_DefendBase2);
         var lordToil_AssaultColony = new LordToil_AssaultColony(true)

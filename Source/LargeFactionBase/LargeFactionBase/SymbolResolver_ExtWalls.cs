@@ -11,12 +11,12 @@ public class SymbolResolver_ExtWalls : SymbolResolver
 
     public override void Resolve(ResolveParams rp)
     {
-        rp.floorDef = BaseGenUtility.CorrespondingTerrainDef(
-            rp.wallStuff = DefDatabase<ThingDef>.AllDefs
-                .Where(d => d.IsStuff && d.stuffProps.CanMake(ThingDefOf.Wall) &&
-                            d.stuffProps.categories.Contains(StuffCategoryDefOf.Stony) && d != ThingDef.Named("Jade") &&
-                            d.BaseMarketValue < 1f).ToList().RandomElementByWeight(x => 3f + (1f / x.BaseMarketValue)),
-            true);
+        var wallStuff = DefDatabase<ThingDef>.AllDefs
+            .Where(d => d.IsStuff && d.stuffProps.CanMake(ThingDefOf.Wall) &&
+                        d.stuffProps.categories.Contains(StuffCategoryDefOf.Stony) && d != ThingDef.Named("Jade") &&
+                        d.BaseMarketValue < 1f).RandomElementByWeight(x => 3f + (1f / x.BaseMarketValue));
+        rp.wallStuff = wallStuff;
+        rp.floorDef = BaseGenUtility.CorrespondingTerrainDef(wallStuff, true);
         ResolveParams resolveParams5;
         ResolveParams resolveParams4;
         ResolveParams resolveParams3;

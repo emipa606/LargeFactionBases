@@ -28,4 +28,4 @@ For compatibility with other mods changing faction bases, check [Choose your ene
 
  
 
-[![Image](https://img.shields.io/github/v/release/emipa606/LargeFactionBases?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/3257781909) | tags: high-risk challenge
+[![Image](https://img.shields.io/github/v/release/emipa606/LargeFactionBases?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/3257781909) | high-risk challenge

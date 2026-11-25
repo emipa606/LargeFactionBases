@@ -1,3 +1,4 @@
+using System.Linq;
 using RimWorld.BaseGen;
 using UnityEngine;
 using Verse;
@@ -11,10 +12,11 @@ public class SymbolResolver_InnerStockpile2 : SymbolResolver
     public override void Resolve(ResolveParams rp)
     {
         var innerStockpileSize = rp.innerStockpileSize;
-        CellRect rect;
+        CellRect rect = default;
         if (innerStockpileSize.HasValue)
         {
-            if (!TryFindPerfectPlaceThenBest(rp.rect, rp.innerStockpileSize.Value, out rect))
+            if (rp.innerStockpileSize != null &&
+                !TryFindPerfectPlaceThenBest(rp.rect, rp.innerStockpileSize.Value, out rect))
             {
                 return;
             }
@@ -48,7 +50,7 @@ public class SymbolResolver_InnerStockpile2 : SymbolResolver
                TryFindRandomInnerRect(outerRect, size, out rect, maxValidCellsFound, out _);
     }
 
-    private bool TryFindRandomInnerRect(CellRect outerRect, int size, out CellRect rect, int minValidCells,
+    private static bool TryFindRandomInnerRect(CellRect outerRect, int size, out CellRect rect, int minValidCells,
         out int maxValidCellsFound)
     {
         var map = BaseGen.globalSettings.map;
@@ -56,15 +58,8 @@ public class SymbolResolver_InnerStockpile2 : SymbolResolver
         var maxValidCellsFoundLocal = 0;
         var result = outerRect.TryFindRandomInnerRect(new IntVec2(size, size), out rect, delegate(CellRect x)
         {
-            var num = 0;
-            foreach (var intVec3 in x)
-            {
-                if (intVec3.Standable(map) && intVec3.GetFirstItem(map) == null &&
-                    intVec3.GetFirstBuilding(map) == null)
-                {
-                    num++;
-                }
-            }
+            var num = x.Count(intVec3 =>
+                intVec3.Standable(map) && intVec3.GetFirstItem(map) == null && intVec3.GetFirstBuilding(map) == null);
 
             maxValidCellsFoundLocal = Mathf.Max(maxValidCellsFoundLocal, num);
             return num >= minValidCells;
